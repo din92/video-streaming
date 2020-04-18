@@ -30,5 +30,4 @@ var send = function send(endpoint, data, onProgress) {
   console.log('sendData->' + endpoint, data);
   return __send(socket, endpoint, data, onProgress);
 };
-console.log("send",send);
 export default send;

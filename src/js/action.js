@@ -23,8 +23,9 @@ export function getVideoStream(){
             xmlHttp.send();
             xmlHttp.onreadystatechange=function(){
                 if(this.readyState===4 && this.status===200){
-                    resolve(this.responseText);
+                    // console.log("resp",this.responseText)
                     dispatch(setVideoSource(this.responseText));
+                    resolve(this.responseText);
                 }
             }
         });

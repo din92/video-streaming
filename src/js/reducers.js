@@ -11,4 +11,4 @@ function video(state="",action){
 
 export default combineReducers({
     video
-})
+});

@@ -1,5 +1,6 @@
 import React,{Component} from "react";
 import Navigation from "./navigation";
+import PlayVideo from "./play_video";
 class Main extends Component{
     constructor(props){
         super(props);
@@ -7,6 +8,7 @@ class Main extends Component{
     render(){
         return (<div>
             <Navigation/>
+            <PlayVideo/>
         </div>)
     }
 }

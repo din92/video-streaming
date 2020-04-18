@@ -66,6 +66,28 @@ let uploadFile = async(req,res,readStream,fileName,mimetype)=>{
     });
     readStream.pipe(uploadStream);
 }
+
+let downloadFile = (req,res,next)=>{
+    let bucket = new GridFSBucket(dbObject.db("temp"),{bucketName:"gridfsdownload"});
+    dbObject.db("temp").collection("gridfsdownload.files",async(err,collection)=>{
+        if(err){
+            console.log("error in downloading file",err);
+           return res.send({error:err});
+        }
+        let arr = await collection.find({}).sort({_id:-1}).toArray()
+        let data=arr[0];
+        if(arr){
+            let downloadStream = bucket.openDownloadStream(data._id);
+            let str="data:" + data.contentType + ";base64,";
+            downloadStream.on('data', function(data) {
+                str+=  new Buffer.from(data).toString('base64');
+            });
+            downloadStream.on("end",()=>{
+                return res.send(str);
+            });
+        }
+    })
+}
 module.exports=(router,common)=>{
     router.get("/test",(req,res,next)=>{
         res.send("<h1>Router is working </h1>")
@@ -75,7 +97,12 @@ module.exports=(router,common)=>{
         allowUpload(req,res,async (fieldname, file, filename, encoding, mimetype)=>{
             await uploadFile(req,res,file,filename,mimetype)
         })
-    })
+    });
+
+    router.get("/downloadFile",(req,res,next)=>{
+        downloadFile(req,res,next);
+    });
+
     createRoutes(common);
     return router;
 }
